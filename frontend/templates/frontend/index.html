@@ -1,0 +1,154 @@
+{% extends 'frontend/base.html' %}
+{% block title %}Listagem de Posts{% endblock %}
+
+{% block content %}
+<main role="main">
+
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h3 class="jumbotron-heading">Totem IFRS-Campus Rolante</h3>
+
+        </div>
+    </section>
+
+
+        <div class="container">
+            <div class="row">
+                {% for category in categorys %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <a href="{% url 'frontend:etapa2' category.id %}">
+                            {% if category.image.url != ''%}
+                            <img class="card-img-top" src="{{ category.image.url }}" width="100%" height="225"
+                                 alt="{{ category.name }}" title="{{ category.name }}">
+                            {% else %}
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+                                 xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"
+                                 focusable="false"
+                                 role="img" aria-label="Placeholder: Thumbnail"><title>{{ category.name }}</title>
+                                <rect width="100%" height="100%" fill="green"/>
+                                <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ category.name }}</text>
+                            </svg>
+                            {% endif %}
+                        </a>
+                        <div class="card-body">
+                            <p class="card-text">{{ category.name }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a type="button" href="{% url 'frontend:etapa2' category.id %}"
+                                       class="btn btn-lg btn-outline-danger">Ver</a>
+                                </div>
+                                <small class="text-muted">Criado em {{ category.created_at }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+                {% if categorys %}
+                <ul class="pagination">
+                <li class="page-item">
+                    {% if categorys.has_previous %}
+                    <a class="page-link" href="?page={{ categorys.previous_page_number }}">Anterior</a>
+                    {% endif %}
+                </li>
+
+                <li class="page-item page-link">
+                    {{ categorys.number }} de {{ categorys.paginator.num_pages }}
+                </li>
+                <li> {% if categorys.has_next %}
+                    <a class="page-link" href="?page={{ categorys.next_page_number }}">Próxima</a> {% endif %}
+                </li>
+            </ul>
+                {% else %}
+            <h1> Sem dados cadastrados </h1>
+            {% endif %}
+
+            </div>
+            <section class="jumbotron text-center">
+                <div class="container">
+                    <h3 class="jumbotron-heading">Ultimos Formulários Adicionados</h3>
+                </div>
+            </section>
+
+            <div class="row">
+                {% for subcategoryitem in subcatitensall %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="embed-responsive embed-responsive-16by9 z-depth-1">
+                            <iframe class="embed-responsive-item" frameborder="1" src="{{ subcategoryitem.link }}"
+                                    scrolling="no"></iframe>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text ">{{ subcategoryitem.title }} - {{ subcategoryitem.subcategory }}</p>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-lg btn-outline-danger" data-toggle="modal"
+                                            data-target="#modal{{ subcategoryitem.id }}">Responder
+
+                                    </button>
+                                </div>
+                                <small class="text-muted">Criado em {{ category.created_at }}</small>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <ul class="pagination">
+                <li class="page-item">
+                    {% if subcatitensall.has_previous %}
+                    <a class="page-link" href="?page={{ subcatitensall.previous_page_number }}">Anterior</a>
+                    {% endif %}
+                </li>
+
+                <li class="page-link">
+                    {{ subcatitensall.number }} de {{ subcatitensall.paginator.num_pages }}
+                </li>
+                <li> {% if subcatitensall.has_next %}
+                    <a class="page-link" href="?page={{ subcatitensall.next_page_number }}">Próxima</a> {% endif %}
+                </li>
+            </ul>
+            </div>
+        </div>
+
+
+    <!-- IFrame grande-->
+
+    <!--Modal: Name-->
+    {% for subcategoryitem in subcatitensall %}
+    <div class="modal fade" id="modal{{ subcategoryitem.id }}" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body mb-0 p-0">
+                    <div class="embed-responsive embed-responsive-1by1">
+                        <iframe data-loading-text="Loading..." class="embed-responsive-item"
+                                src="{{ subcategoryitem.link }}" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <!--Footer-->
+                <div class="modal-footer justify-content-center">
+                    <span class="mr-4">{{ subcategoryitem.title }}</span>
+                    <a type="button" class="btn-floating btn-sm btn-fb"><i class="fab fa-facebook-f">face</i></a>
+                    <!--Twitter-->
+                    <a type="button" class="btn-floating btn-sm btn-tw"><i class="fab fa-twitter">twitter</i></a>
+                    <button type="button" class="btn btn-outline-primary btn-rounded btn-md ml-4" data-dismiss="modal">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+            <!--/.Content-->
+
+        </div>
+    </div>
+    {% endfor %}
+    <!--Modal: Name-->
+
+</main>
+{% endblock %}

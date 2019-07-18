@@ -1,0 +1,73 @@
+{% extends 'frontend/base.html' %}
+{% block title %}Listagem de Posts{% endblock %}
+
+{% block content %}
+<main role="main">
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">Totem IFRS-Campus Rolante</h1>
+
+        </div>
+    </section>
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% for subcategory in subcats %}
+
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <a href="{% url 'frontend:etapa3' subcategory.id %}">
+                                 <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+                                 xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"
+                                 focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>{{ subcategory.name }}</title>
+                                <rect width="100%" height="100%" fill="green"/>
+                                <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ subcategory.sigla }}</text>
+                            </svg>
+
+                        </a>
+                        <div class="card-body">
+                            <p class="card-text">{{ subcategory.name }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a type="button" href="{% url 'frontend:etapa3' subcategory.id %}"
+                                       class="btn btn-lg btn-outline-danger">Ver</a>
+                                </div>
+                                <small class="text-muted">Criado em {{ subcategory.created_at }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {% endfor %}
+
+            </div>
+
+
+
+
+
+     {% if subcats  %}
+     <ul class="pagination">
+                <li class="page-item">
+                    {% if subcats.has_previous %}
+                    <a class="page-link" href="?page={{ subcats.previous_page_number }}">Anterior</a>
+                    {% endif %}
+                </li>
+
+                <li class="page-link">
+                    {{ subcats.number }} de {{ subcats.paginator.num_pages }}
+                </li>
+                <li> {% if subcats.has_next %}
+                    <a class="page-link" href="?page={{ subcats.next_page_number }}">Próxima</a> {% endif %}
+                </li>
+            </ul>
+            <!--Modal: Name-->
+            {% else %}
+            <h1> Sem dados cadastrados </h1>
+            {% endif %}
+
+</div></div>
+</main>
+{% endblock %}
